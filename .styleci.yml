@@ -1,0 +1,15 @@
+preset: recommended
+
+risky: false
+
+enabled:
+
+disabled:
+  - align_double_arrow
+  - phpdoc_no_package
+
+finder:
+  exclude:
+    - "sample-app"
+  name:
+    - "*.php"
