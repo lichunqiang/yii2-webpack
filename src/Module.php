@@ -1,14 +1,17 @@
 <?php
 /**
- * Module.php
+ * Module.php.
  *
  * PHP version 5.6+
  *
  * @author Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2017 Philippe Gaultier
  * @license http://www.sweelix.net/license license
+ *
  * @version 1.1.0
+ *
  * @link http://www.sweelix.net
+ *
  * @package sweelix\webpack
  */
 
@@ -18,22 +21,25 @@ use yii\base\BootstrapInterface;
 use yii\base\Module as BaseModule;
 use yii\console\Application as ConsoleApplication;
 
-
 /**
- * Webpack Module definition
+ * Webpack Module definition.
  *
  * @author Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2017 Philippe Gaultier
  * @license http://www.sweelix.net/license license
+ *
  * @version 1.1.0
+ *
  * @link http://www.sweelix.net
+ *
  * @package sweelix\webpack
+ *
  * @since XXX
  */
 class Module extends BaseModule implements BootstrapInterface
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function bootstrap($app)
     {
@@ -43,8 +49,10 @@ class Module extends BaseModule implements BootstrapInterface
     }
 
     /**
-     * Update controllers map to add console commands
+     * Update controllers map to add console commands.
+     *
      * @param ConsoleApplication $app
+     *
      * @since 1.0.0
      */
     protected function mapConsoleControllers(ConsoleApplication $app)

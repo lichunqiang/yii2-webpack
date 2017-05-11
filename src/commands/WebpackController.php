@@ -1,38 +1,44 @@
 <?php
 /**
- * WebpackController.php
+ * WebpackController.php.
  *
  * PHP version 5.6+
  *
  * @author Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2017 Philippe Gaultier
  * @license http://www.sweelix.net/license license
+ *
  * @version 1.1.0
+ *
  * @link http://www.sweelix.net
+ *
  * @package sweelix\webpack\commands
  */
 
 namespace sweelix\webpack\commands;
 
+use Yii;
 use yii\console\Controller;
 use yii\helpers\Console;
 use yii\helpers\Json;
-use Yii;
 
 /**
- * Manage assets through Webpack2
+ * Manage assets through Webpack2.
  *
  * @author Philippe Gaultier <pgaultier@sweelix.net>
  * @copyright 2010-2017 Philippe Gaultier
  * @license http://www.sweelix.net/license license
+ *
  * @version 1.1.0
+ *
  * @link http://www.sweelix.net
+ *
  * @package sweelix\webpack\commands
+ *
  * @since 1.0.0
  */
 class WebpackController extends Controller
 {
-
     /**
      * @var string alias to package.json template file
      */
@@ -59,19 +65,19 @@ class WebpackController extends Controller
     protected $composerJsonPath;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public $defaultAction = 'init';
 
     /**
-     * Initialize webpack for current project (webpack.config.js, package.json, webpack-yii2.json)
+     * Initialize webpack for current project (webpack.config.js, package.json, webpack-yii2.json).
      *
      * @return int
+     *
      * @since 1.0.0
      */
     public function actionInit()
     {
-
         $this->generatePackageJson();
         $this->generateConfigJson();
         $this->generateWebpackConfigJs();
@@ -81,63 +87,73 @@ class WebpackController extends Controller
         $this->stdout("\t".' * '.pathinfo($this->packageJson, PATHINFO_BASENAME)."\n", Console::BOLD, Console::FG_GREEN);
         $this->stdout('Install npm dependencies: npm install'."\n", Console::BOLD, Console::FG_GREEN);
         $this->stdout('Build assets: webpack'."\n", Console::BOLD, Console::FG_GREEN);
+
         return Controller::EXIT_CODE_NORMAL;
     }
 
     /**
-     * Generate webpack.config.js file
+     * Generate webpack.config.js file.
      *
      * @return int
+     *
      * @since 1.0.0
      */
     public function actionGenerateWebpack()
     {
         $this->generateWebpackConfigJs();
         $this->stdout('Build assets: webpack'."\n", Console::BOLD, Console::FG_GREEN);
+
         return Controller::EXIT_CODE_NORMAL;
     }
 
     /**
-     * Generate package.json file
+     * Generate package.json file.
      *
      * @return int
+     *
      * @since 1.0.0
      */
     public function actionGeneratePackage()
     {
         $this->generatePackageJson();
         $this->stdout('Install npm dependencies: npm install'."\n", Console::BOLD, Console::FG_GREEN);
+
         return Controller::EXIT_CODE_NORMAL;
     }
 
     /**
-     * Generate webpack-yii2.json file
+     * Generate webpack-yii2.json file.
      *
      * @return int
+     *
      * @since 1.0.0
      */
     public function actionGenerateConfig()
     {
         $this->generateConfigJson();
         $this->stdout('Build assets with generated config: webpack'."\n", Console::BOLD, Console::FG_GREEN);
+
         return Controller::EXIT_CODE_NORMAL;
     }
 
     /**
-     * Generate tsconfig.json file
+     * Generate tsconfig.json file.
      *
      * @return int
+     *
      * @since 1.0.1
      */
     public function actionGenerateTypescriptConfig()
     {
         $this->generateTsConfigJson();
         $this->stdout('Build typescript assets with generated config: webpack'."\n", Console::BOLD, Console::FG_GREEN);
+
         return Controller::EXIT_CODE_NORMAL;
     }
 
     /**
-     * Prepare webpack.config.js file
+     * Prepare webpack.config.js file.
+     *
      * @since 1.0.0
      */
     protected function generateWebpackConfigJs()
@@ -146,7 +162,7 @@ class WebpackController extends Controller
         $composerJsonPath = $this->findComposerJson();
         $webpackJs = file_get_contents(Yii::getAlias($this->webpackConfigJs));
         $filename = pathinfo($this->webpackConfigJs, PATHINFO_BASENAME);
-        $webpackConfigJsonFile = $composerJsonPath . '/' . $filename;
+        $webpackConfigJsonFile = $composerJsonPath.'/'.$filename;
         if (file_exists($webpackConfigJsonFile) === true) {
             $question = $this->ansiFormat('Overwrite '.$filename.' ?', Console::FG_RED, Console::BOLD);
             $status = $this->confirm($question);
@@ -156,11 +172,11 @@ class WebpackController extends Controller
         } else {
             file_put_contents($webpackConfigJsonFile, $webpackJs);
         }
-
     }
 
     /**
-     * Prepare tsconfig.json file
+     * Prepare tsconfig.json file.
+     *
      * @since 1.0.1
      */
     protected function generateTsConfigJson()
@@ -169,7 +185,7 @@ class WebpackController extends Controller
         $composerJsonPath = $this->findComposerJson();
         $webpackJs = file_get_contents(Yii::getAlias($this->tsConfigJson));
         $filename = pathinfo($this->tsConfigJson, PATHINFO_BASENAME);
-        $webpackConfigJsonFile = $composerJsonPath . '/' . $filename;
+        $webpackConfigJsonFile = $composerJsonPath.'/'.$filename;
         if (file_exists($webpackConfigJsonFile) === true) {
             $question = $this->ansiFormat('Overwrite '.$filename.' ?', Console::FG_RED, Console::BOLD);
             $status = $this->confirm($question);
@@ -179,11 +195,11 @@ class WebpackController extends Controller
         } else {
             file_put_contents($webpackConfigJsonFile, $webpackJs);
         }
-
     }
 
     /**
-     * Prepare webpack config for yii
+     * Prepare webpack config for yii.
+     *
      * @since 1.0.0
      */
     protected function generateConfigJson()
@@ -193,7 +209,7 @@ class WebpackController extends Controller
 
         $configJson = Json::decode(file_get_contents(Yii::getAlias($this->webpackConfigJson)));
         $sourceDir = $this->prompt('Webpack assets path relative to package.json file ?', [
-            'required' => true
+            'required' => true,
         ]);
         $configJson['sourceDir'] = $sourceDir;
 
@@ -227,11 +243,11 @@ class WebpackController extends Controller
         ]);
         $configJson['catalog'] = $catalogFilename;
 
-        $configJson['entry'] = (object)[];
-        $configJson['externals'] = (object)[];
-        $configJson['alias'] = (object)[];
+        $configJson['entry'] = (object) [];
+        $configJson['externals'] = (object) [];
+        $configJson['alias'] = (object) [];
         $filename = pathinfo($this->webpackConfigJson, PATHINFO_BASENAME);
-        $webpackConfigJsonFile = $composerJsonPath . '/' . $filename;
+        $webpackConfigJsonFile = $composerJsonPath.'/'.$filename;
         if (file_exists($webpackConfigJsonFile) === true) {
             $question = $this->ansiFormat('Overwrite '.$filename.' ?', Console::FG_RED, Console::BOLD);
             $status = $this->confirm($question);
@@ -241,12 +257,13 @@ class WebpackController extends Controller
         } else {
             file_put_contents($webpackConfigJsonFile, Json::encode($configJson, JSON_PRETTY_PRINT));
         }
-
     }
 
     /**
-     * Search composer.json
+     * Search composer.json.
+     *
      * @return string
+     *
      * @since 1.0.0
      */
     protected function findComposerJson()
@@ -254,13 +271,15 @@ class WebpackController extends Controller
         if ($this->composerJsonPath === null) {
             $options = [
                 'required' => true,
-                'validator' => function($input, &$error) {
+                'validator' => function ($input, &$error) {
                     if (file_exists($input) === false) {
                         $error = 'The composer.json file must exist!';
+
                         return false;
                     }
+
                     return true;
-                }
+                },
             ];
             if (file_exists('composer.json') === true) {
                 $options['default'] = 'composer.json';
@@ -269,12 +288,13 @@ class WebpackController extends Controller
             $composerPath = pathinfo($composerJson, PATHINFO_DIRNAME);
             $this->composerJsonPath = $composerPath;
         }
-        return $this->composerJsonPath;
 
+        return $this->composerJsonPath;
     }
 
     /**
-     * Search information from composer.json and generate package.json
+     * Search information from composer.json and generate package.json.
+     *
      * @since 1.0.0
      */
     protected function generatePackageJson()
@@ -319,7 +339,6 @@ class WebpackController extends Controller
         $description = $this->prompt('Description ?', $options);
         $packageJson['description'] = $description;
 
-
         $options = [];
         if (isset($composerData['license']) === true) {
             $options['default'] = $composerData['license'];
@@ -328,7 +347,7 @@ class WebpackController extends Controller
         $packageJson['license'] = $license;
 
         $filename = pathinfo($this->packageJson, PATHINFO_BASENAME);
-        $packageJsonFile = $composerJsonPath . '/' . $filename;
+        $packageJsonFile = $composerJsonPath.'/'.$filename;
         if (file_exists($packageJsonFile) === true) {
             $question = $this->ansiFormat('Overwrite '.$filename.' ?', Console::FG_RED, Console::BOLD);
             $status = $this->confirm($question);
